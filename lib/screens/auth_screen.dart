@@ -16,6 +16,7 @@ class _AuthScreenState extends State<AuthScreen> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  bool _obscurePassword = true;
 
   @override
   void dispose() {
@@ -75,12 +76,13 @@ class _AuthScreenState extends State<AuthScreen> {
                         decoration: BoxDecoration(
                           color: Theme.of(context).colorScheme.surface,
                           borderRadius: BorderRadius.circular(16),
-                          border: Border.all(color: Theme.of(context).dividerTheme.color ?? Colors.grey),
+                          border: Border.all(
+                            color:
+                                Theme.of(context).dividerTheme.color ??
+                                Colors.grey,
+                          ),
                         ),
-                        child: Image.asset(
-                          'assets/logo-primary.png',
-                          width: 150,
-                        ),
+                        child: Image.asset('assets/icon.png', width: 100),
                       ),
                     ],
                   ),
@@ -103,8 +105,13 @@ class _AuthScreenState extends State<AuthScreen> {
                         ),
                         const SizedBox(height: 8),
                         Text(
-                          'Sign in to your account',
-                          style: TextStyle(fontSize: 16, color: Theme.of(context).textTheme.bodyMedium?.color),
+                          'Login to your IssueFlow account',
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Theme.of(
+                              context,
+                            ).textTheme.bodyMedium?.color,
+                          ),
                           textAlign: TextAlign.center,
                         ),
                         const SizedBox(height: 32),
@@ -121,7 +128,21 @@ class _AuthScreenState extends State<AuthScreen> {
                         CustomTextField(
                           controller: _passwordController,
                           labelText: 'Password',
-                          obscureText: true,
+                          obscureText: _obscurePassword,
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              _obscurePassword
+                                  ? Icons.visibility_off_outlined
+                                  : Icons.visibility_outlined,
+                              color: Theme.of(context).colorScheme.onSurface.withAlpha(153),
+                              size: 22,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                _obscurePassword = !_obscurePassword;
+                              });
+                            },
+                          ),
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return 'Password is required';
@@ -129,48 +150,107 @@ class _AuthScreenState extends State<AuthScreen> {
                             return null;
                           },
                         ),
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: GestureDetector(
+                            onTap: () {
+                              // TODO: Navigate to forgot password flow
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 4, bottom: 8),
+                              child: Text(
+                                'Forgot your password?',
+                                style: TextStyle(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w500,
+                                  color: Theme.of(context).colorScheme.primary,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
                         const SizedBox(height: 16),
                         PrimaryButton(
                           text: 'Login',
                           isLoading: isLoading,
                           onPressed: _submit,
                         ),
-                        const SizedBox(height: 32),
-                        Container(
-                          padding: const EdgeInsets.all(16),
-                          decoration: BoxDecoration(
-                            color: Theme.of(context).colorScheme.surface,
-                            borderRadius: BorderRadius.circular(16),
-                            border: Border.all(color: Theme.of(context).dividerTheme.color ?? Colors.grey),
-                          ),
-                          child: Column(
+                        const SizedBox(height: 24),
+                        Text.rich(
+                          TextSpan(
+                            text: 'By clicking continue, you agree to our ',
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: Theme.of(
+                                context,
+                              ).textTheme.bodyMedium?.color,
+                            ),
                             children: [
-                              Text(
-                                'Sample Credentials',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 12,
-                                  color: Theme.of(context).colorScheme.onSurface,
+                              WidgetSpan(
+                                child: GestureDetector(
+                                  onTap: () {
+                                    // TODO: Open Terms of Service
+                                  },
+                                  child: Text(
+                                    'Terms of Service',
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w600,
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.primary,
+                                      decoration: TextDecoration.underline,
+                                      decorationColor: Theme.of(
+                                        context,
+                                      ).colorScheme.primary,
+                                    ),
+                                  ),
                                 ),
                               ),
-                              const SizedBox(height: 8),
-                              Text(
-                                'Admin: admin@test.com / password123',
+                              TextSpan(
+                                text: ' and ',
                                 style: TextStyle(
                                   fontSize: 12,
-                                  color: Theme.of(context).textTheme.bodyMedium?.color,
+                                  color: Theme.of(
+                                    context,
+                                  ).textTheme.bodyMedium?.color,
                                 ),
                               ),
-                              Text(
-                                'User: user@test.com / password123',
+                              WidgetSpan(
+                                child: GestureDetector(
+                                  onTap: () {
+                                    // TODO: Open Privacy Policy
+                                  },
+                                  child: Text(
+                                    'Privacy Policy',
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w600,
+                                      color: Theme.of(
+                                        context,
+                                      ).colorScheme.primary,
+                                      decoration: TextDecoration.underline,
+                                      decorationColor: Theme.of(
+                                        context,
+                                      ).colorScheme.primary,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              TextSpan(
+                                text: '.',
                                 style: TextStyle(
                                   fontSize: 12,
-                                  color: Theme.of(context).textTheme.bodyMedium?.color,
+                                  color: Theme.of(
+                                    context,
+                                  ).textTheme.bodyMedium?.color,
                                 ),
                               ),
                             ],
                           ),
+                          textAlign: TextAlign.center,
                         ),
+                        const SizedBox(height: 32),
                       ],
                     ),
                   ),

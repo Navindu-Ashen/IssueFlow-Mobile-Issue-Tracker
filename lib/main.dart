@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:provider/provider.dart';
 
 import 'core/theme/app_theme.dart';
@@ -11,7 +12,8 @@ import 'providers/theme_provider.dart';
 import 'screens/splash_screen.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
   // Initialize Local Storage
   final localStorageService = LocalStorageService();
@@ -27,7 +29,7 @@ void main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(
-          create: (_) => AuthProvider(localStorageService),
+          create: (_) => AuthProvider(localStorageService, mockApiService),
         ),
         ChangeNotifierProvider(
           create: (_) => IssueProvider(issueRepository),

@@ -102,4 +102,58 @@ class MockApiService {
       statusCode: 200,
     );
   }
+
+  // Mock user credentials store
+  static final List<Map<String, dynamic>> _mockUsers = [
+    {
+      'id': 'admin_1',
+      'userName': 'Admin User',
+      'email': 'admin@test.com',
+      'contactNumber': '+1234567890',
+      'role': 'Admin',
+      'password': 'password123',
+    },
+    {
+      'id': 'user_1',
+      'userName': 'Normal User',
+      'email': 'user@test.com',
+      'contactNumber': '+0987654321',
+      'role': 'User',
+      'password': 'password123',
+    },
+  ];
+
+  // Simulate POST /auth/login
+  Future<Response> login(String email, String password) async {
+    final user = _mockUsers.cast<Map<String, dynamic>?>().firstWhere(
+      (u) => u!['email'] == email && u['password'] == password,
+      orElse: () => null,
+    );
+
+    if (user == null) {
+      return Response(
+        requestOptions: RequestOptions(path: '/auth/login'),
+        data: {
+          'success': false,
+          'message':
+              'Invalid credentials. Use admin@test.com or user@test.com with password123',
+        },
+        statusCode: 401,
+      );
+    }
+
+    // Return user data without the password, plus a mock token
+    final userData = Map<String, dynamic>.from(user);
+    userData.remove('password');
+
+    return Response(
+      requestOptions: RequestOptions(path: '/auth/login'),
+      data: {
+        'success': true,
+        'token': 'mock_jwt_token_12345',
+        'user': {...userData, 'password': user['password']},
+      },
+      statusCode: 200,
+    );
+  }
 }

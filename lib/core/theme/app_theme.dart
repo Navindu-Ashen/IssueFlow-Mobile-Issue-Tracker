@@ -7,7 +7,7 @@ class AppTheme {
     return ThemeData(
       brightness: Brightness.light,
       primaryColor: const Color(0xFF9D5FD4), // Purple
-      scaffoldBackgroundColor: const Color(0xFFFAFAFA), // Zinc 50
+      scaffoldBackgroundColor: Colors.white,
       colorScheme: const ColorScheme.light(
         primary: Color(0xFF9D5FD4),
         secondary: Color(0xFF18181B),
@@ -82,7 +82,7 @@ class AppTheme {
     return ThemeData(
       brightness: Brightness.dark,
       primaryColor: const Color(0xFF9D5FD4), // Purple
-      scaffoldBackgroundColor: const Color(0xFF09090B), // Zinc 950
+      scaffoldBackgroundColor: const Color(0xFF120022),
       colorScheme: const ColorScheme.dark(
         primary: Color(0xFF9D5FD4),
         secondary: Color(0xFFF4F4F5),
@@ -99,7 +99,7 @@ class AppTheme {
         bodyMedium: GoogleFonts.inter(color: const Color(0xFFA1A1AA)), // Zinc 400
       ),
       appBarTheme: const AppBarTheme(
-        backgroundColor: Color(0xFF09090B),
+        backgroundColor: const Color(0xFF120022),
         foregroundColor: Color(0xFFFAFAFA),
         elevation: 0,
         scrolledUnderElevation: 0,
@@ -112,22 +112,22 @@ class AppTheme {
           elevation: 0,
           padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.circular(6),
           ),
           textStyle: GoogleFonts.inter(fontWeight: FontWeight.bold),
         ),
       ),
       inputDecorationTheme: InputDecorationTheme(
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(6),
           borderSide: const BorderSide(color: Color(0xFF27272A)), // Zinc 800
         ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(6),
           borderSide: const BorderSide(color: Color(0xFF27272A)),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(6),
           borderSide: const BorderSide(color: Color(0xFF9D5FD4), width: 1.5),
         ),
         filled: true,
@@ -137,7 +137,7 @@ class AppTheme {
       ),
       cardTheme: CardThemeData(
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(8),
           side: BorderSide(color: Colors.grey[800]!),
         ),
         elevation: 0,

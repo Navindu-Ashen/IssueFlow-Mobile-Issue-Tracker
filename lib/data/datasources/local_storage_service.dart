@@ -49,6 +49,6 @@ class LocalStorageService {
   }
 
   // Settings Operations
-  bool getIsDarkMode() => settingsBox.get(AppConstants.themeKey) ?? false;
+  bool? getIsDarkMode() => settingsBox.get(AppConstants.themeKey);
   Future<void> saveIsDarkMode(bool isDark) => settingsBox.put(AppConstants.themeKey, isDark);
 }

@@ -22,20 +22,31 @@ class AppDrawer extends StatelessWidget {
       child: Column(
         children: [
           Container(
-            padding: const EdgeInsets.only(top: 60, bottom: 20, left: 24, right: 24),
+            padding: const EdgeInsets.only(
+              top: 60,
+              bottom: 20,
+              left: 24,
+              right: 24,
+            ),
             alignment: Alignment.centerLeft,
             decoration: BoxDecoration(
-              border: Border(bottom: BorderSide(color: Theme.of(context).dividerTheme.color ?? Colors.grey)),
+              border: Border(
+                bottom: BorderSide(
+                  color: Theme.of(context).dividerTheme.color ?? Colors.grey,
+                ),
+              ),
             ),
             child: Row(
               children: [
                 Container(
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
+                    color: Theme.of(
+                      context,
+                    ).colorScheme.primary.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12),
                   ),
-                  child: Icon(Icons.bug_report, color: Theme.of(context).colorScheme.primary, size: 24),
+                  child: Image.asset('assets/icon.png', width: 30),
                 ),
                 const SizedBox(width: 12),
                 Text(
@@ -63,7 +74,9 @@ class AppDrawer extends StatelessWidget {
                     if (currentRoute != 'Dashboard') {
                       Navigator.pushReplacement(
                         context,
-                        MaterialPageRoute(builder: (context) => const DashboardScreen()),
+                        MaterialPageRoute(
+                          builder: (context) => const DashboardScreen(),
+                        ),
                       );
                     } else {
                       Navigator.pop(context);
@@ -81,7 +94,9 @@ class AppDrawer extends StatelessWidget {
                     if (currentRoute != 'All Issues') {
                       Navigator.pushReplacement(
                         context,
-                        MaterialPageRoute(builder: (context) => const AllIssuesScreen()),
+                        MaterialPageRoute(
+                          builder: (context) => const AllIssuesScreen(),
+                        ),
                       );
                     } else {
                       Navigator.pop(context);
@@ -99,7 +114,9 @@ class AppDrawer extends StatelessWidget {
                     if (currentRoute != 'Recent Activities') {
                       Navigator.pushReplacement(
                         context,
-                        MaterialPageRoute(builder: (context) => const RecentActivitiesScreen()),
+                        MaterialPageRoute(
+                          builder: (context) => const RecentActivitiesScreen(),
+                        ),
                       );
                     } else {
                       Navigator.pop(context);
@@ -109,7 +126,10 @@ class AppDrawer extends StatelessWidget {
               ],
             ),
           ),
-          Divider(height: 1, color: Theme.of(context).dividerTheme.color ?? Colors.grey),
+          Divider(
+            height: 1,
+            color: Theme.of(context).dividerTheme.color ?? Colors.grey,
+          ),
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Row(
@@ -119,13 +139,17 @@ class AppDrawer extends StatelessWidget {
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => const ProfileScreen()),
+                        MaterialPageRoute(
+                          builder: (context) => const ProfileScreen(),
+                        ),
                       );
                     },
                     child: Row(
                       children: [
                         CircleAvatar(
-                          backgroundColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
+                          backgroundColor: Theme.of(
+                            context,
+                          ).colorScheme.primary.withValues(alpha: 0.1),
                           radius: 18,
                           child: Text(
                             user?.userName.substring(0, 1).toUpperCase() ?? 'U',
@@ -144,7 +168,9 @@ class AppDrawer extends StatelessWidget {
                               Text(
                                 user?.userName ?? 'User',
                                 style: TextStyle(
-                                  color: Theme.of(context).colorScheme.onSurface,
+                                  color: Theme.of(
+                                    context,
+                                  ).colorScheme.onSurface,
                                   fontSize: 14,
                                   fontWeight: FontWeight.w600,
                                 ),
@@ -154,7 +180,9 @@ class AppDrawer extends StatelessWidget {
                               Text(
                                 user?.role ?? 'Role',
                                 style: TextStyle(
-                                  color: Theme.of(context).textTheme.bodyMedium?.color,
+                                  color: Theme.of(
+                                    context,
+                                  ).textTheme.bodyMedium?.color,
                                   fontSize: 12,
                                 ),
                                 maxLines: 1,
@@ -169,7 +197,9 @@ class AppDrawer extends StatelessWidget {
                 ),
                 IconButton(
                   icon: Icon(
-                    themeProvider.isDarkMode ? Icons.light_mode_outlined : Icons.dark_mode_outlined,
+                    themeProvider.isDarkMode
+                        ? Icons.light_mode_outlined
+                        : Icons.dark_mode_outlined,
                     size: 20,
                     color: Theme.of(context).textTheme.bodyMedium?.color,
                   ),
@@ -193,7 +223,9 @@ class AppDrawer extends StatelessWidget {
     required bool isSelected,
     required VoidCallback onTap,
   }) {
-    final color = isSelected ? Theme.of(context).colorScheme.onSurface : Colors.grey;
+    final color = isSelected
+        ? Theme.of(context).colorScheme.onSurface
+        : Colors.grey;
 
     return InkWell(
       onTap: onTap,
@@ -201,7 +233,9 @@ class AppDrawer extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
-          color: isSelected ? Theme.of(context).colorScheme.surface : Colors.transparent,
+          color: isSelected
+              ? Theme.of(context).colorScheme.surface
+              : Colors.transparent,
         ),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         child: Row(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:provider/provider.dart';
 import '../providers/auth_provider.dart';
 import 'auth_screen.dart';
@@ -15,17 +16,20 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    _checkAuth();
+    _initialize();
   }
 
-  Future<void> _checkAuth() async {
-    // Artificial delay for splash screen effect
+  Future<void> _initialize() async {
+    // Keep the native splash screen visible while we initialize
     await Future.delayed(const Duration(seconds: 2));
 
     if (!mounted) return;
 
     final authProvider = context.read<AuthProvider>();
-    
+
+    // Remove the native splash screen before navigating
+    FlutterNativeSplash.remove();
+
     if (authProvider.isAuthenticated) {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (_) => const DashboardScreen()),
@@ -39,23 +43,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-
-    return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            // Use different logo variations based on theme if needed,
-            // but logo.png works well as it's full colored.
-            Image.asset(
-              'assets/logo.png',
-              width: 150,
-            ),
-            const SizedBox(height: 24),
-            const CircularProgressIndicator(strokeWidth: 2),
-          ],
-        ),
-      ),
-    );
+    // Return an empty scaffold — the native splash screen covers this
+    return const Scaffold();
   }
 }

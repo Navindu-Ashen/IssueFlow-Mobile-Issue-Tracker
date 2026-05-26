@@ -66,12 +66,46 @@ class ProfileScreen extends StatelessWidget {
                     const SizedBox(height: 32),
                     ElevatedButton.icon(
                       onPressed: () async {
-                        await authProvider.logout();
-                        if (context.mounted) {
-                          Navigator.of(context).pushAndRemoveUntil(
-                            MaterialPageRoute(builder: (_) => const AuthScreen()),
-                            (route) => false,
-                          );
+                        final confirmed = await showDialog<bool>(
+                          context: context,
+                          builder: (context) => AlertDialog(
+                            title: const Text('Logout'),
+                            content: const Text('Are you sure you want to logout?'),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed: () => Navigator.of(context).pop(false),
+                                child: Text(
+                                  'Cancel',
+                                  style: TextStyle(
+                                    color: Theme.of(context).colorScheme.onSurface,
+                                  ),
+                                ),
+                              ),
+                              TextButton(
+                                onPressed: () => Navigator.of(context).pop(true),
+                                child: const Text(
+                                  'Logout',
+                                  style: TextStyle(
+                                    color: Colors.redAccent,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+
+                        if (confirmed == true) {
+                          await authProvider.logout();
+                          if (context.mounted) {
+                            Navigator.of(context).pushAndRemoveUntil(
+                              MaterialPageRoute(builder: (_) => const AuthScreen()),
+                              (route) => false,
+                            );
+                          }
                         }
                       },
                       icon: const Icon(Icons.logout, color: Colors.redAccent),

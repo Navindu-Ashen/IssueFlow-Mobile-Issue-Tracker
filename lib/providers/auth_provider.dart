@@ -1,16 +1,18 @@
 import 'package:flutter/foundation.dart';
+import '../core/network/mock_api_service.dart';
 import '../data/datasources/local_storage_service.dart';
 import '../data/models/user_model.dart';
 
 class AuthProvider extends ChangeNotifier {
   final LocalStorageService _localStorage;
+  final MockApiService _apiService;
   
   bool _isAuthenticated = false;
   bool _isLoading = false;
   String? _errorMessage;
   User? _currentUser;
 
-  AuthProvider(this._localStorage) {
+  AuthProvider(this._localStorage, this._apiService) {
     _checkAuthStatus();
   }
 
@@ -44,34 +46,21 @@ class AuthProvider extends ChangeNotifier {
          throw Exception('Password must be at least 6 characters');
       }
 
-      // Simulate network request
-      await Future.delayed(const Duration(seconds: 1));
+      // Call mock API login endpoint
+      final response = await _apiService.login(email, password);
 
-      User? user;
-      if (email == 'admin@test.com' && password == 'password123') {
-        user = User(
-          id: 'admin_1',
-          userName: 'Admin User',
-          email: 'admin@test.com',
-          contactNumber: '+1234567890',
-          role: 'Admin',
-          password: password,
-        );
-      } else if (email == 'user@test.com' && password == 'password123') {
-        user = User(
-          id: 'user_1',
-          userName: 'Normal User',
-          email: 'user@test.com',
-          contactNumber: '+0987654321',
-          role: 'User',
-          password: password,
-        );
-      } else {
-        throw Exception('Invalid credentials. Use admin@test.com or user@test.com with password123');
+      if (response.statusCode != 200) {
+        throw Exception(response.data['message'] ?? 'Login failed');
       }
 
-      // Save mock token and user
-      await _localStorage.saveToken('mock_jwt_token_12345');
+      final responseData = response.data as Map<String, dynamic>;
+      final token = responseData['token'] as String;
+      final userData = responseData['user'] as Map<String, dynamic>;
+
+      final user = User.fromMap(userData);
+
+      // Save token and user
+      await _localStorage.saveToken(token);
       await _localStorage.saveUser(user.toJson());
       
       _currentUser = user;

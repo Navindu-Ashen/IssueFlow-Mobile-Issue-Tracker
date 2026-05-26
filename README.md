@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/logo-primary.png" alt="IssueFlow Logo" width="200" />
+  <img src="assets/logo-primary-w.png" alt="IssueFlow Logo" width="200" />
 </p>
 
 <h1 align="center">IssueFlow — Mobile Issue Tracker</h1>

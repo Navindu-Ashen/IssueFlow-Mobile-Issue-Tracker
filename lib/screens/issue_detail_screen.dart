@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../data/models/issue_model.dart';
 import '../providers/issue_provider.dart';
+import '../core/services/export_service.dart';
 import 'issue_form_screen.dart';
 
 class IssueDetailScreen extends StatelessWidget {
@@ -13,9 +14,9 @@ class IssueDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     // Re-fetch issue from provider to get live updates
     final currentIssue = context.watch<IssueProvider>().issues.firstWhere(
-          (i) => i.id == issue.id,
-          orElse: () => issue,
-        );
+      (i) => i.id == issue.id,
+      orElse: () => issue,
+    );
 
     final bgColor = Theme.of(context).scaffoldBackgroundColor;
     final textColor = Theme.of(context).colorScheme.onSurface;
@@ -42,18 +43,28 @@ class IssueDetailScreen extends StatelessWidget {
                         _buildPriorityBadge(context, currentIssue.priority),
                         const Spacer(),
                         if (currentIssue.syncStatus != SyncStatus.Synced)
-                          const Icon(Icons.cloud_upload_outlined, color: Colors.orange, size: 20),
+                          const Icon(
+                            Icons.cloud_upload_outlined,
+                            color: Colors.orange,
+                            size: 20,
+                          ),
                       ],
                     ),
                     const SizedBox(height: 24),
                     Text(
                       currentIssue.title,
-                      style: TextStyle(fontSize: 28, fontWeight: FontWeight.bold, color: textColor),
+                      style: TextStyle(
+                        fontSize: 28,
+                        fontWeight: FontWeight.bold,
+                        color: textColor,
+                      ),
                     ),
                     const SizedBox(height: 8),
                     Text(
                       'Created on: ${currentIssue.createdAt.toLocal().toString().split('.')[0]}',
-                      style: TextStyle(color: Theme.of(context).textTheme.bodyMedium?.color),
+                      style: TextStyle(
+                        color: Theme.of(context).textTheme.bodyMedium?.color,
+                      ),
                     ),
                     if (currentIssue.assignee != null) ...[
                       const SizedBox(height: 16),
@@ -61,13 +72,22 @@ class IssueDetailScreen extends StatelessWidget {
                         children: [
                           CircleAvatar(
                             radius: 12,
-                            backgroundColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
-                            child: Icon(Icons.person, size: 16, color: Theme.of(context).colorScheme.primary),
+                            backgroundColor: Theme.of(
+                              context,
+                            ).colorScheme.primary.withValues(alpha: 0.1),
+                            child: Icon(
+                              Icons.person,
+                              size: 16,
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
                           ),
                           const SizedBox(width: 8),
                           Text(
                             'Assignee: ${currentIssue.assignee}',
-                            style: TextStyle(fontWeight: FontWeight.w500, color: textColor),
+                            style: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              color: textColor,
+                            ),
                           ),
                         ],
                       ),
@@ -78,7 +98,11 @@ class IssueDetailScreen extends StatelessWidget {
                       decoration: BoxDecoration(
                         color: Theme.of(context).colorScheme.surface,
                         borderRadius: BorderRadius.circular(16),
-                        border: Border.all(color: Theme.of(context).dividerTheme.color ?? Colors.grey),
+                        border: Border.all(
+                          color:
+                              Theme.of(context).dividerTheme.color ??
+                              Colors.grey,
+                        ),
                       ),
                       width: double.infinity,
                       child: Column(
@@ -86,12 +110,22 @@ class IssueDetailScreen extends StatelessWidget {
                         children: [
                           Text(
                             'Description',
-                            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: textColor),
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: textColor,
+                            ),
                           ),
                           const SizedBox(height: 12),
                           Text(
                             currentIssue.description,
-                            style: TextStyle(fontSize: 16, height: 1.5, color: Theme.of(context).textTheme.bodyMedium?.color),
+                            style: TextStyle(
+                              fontSize: 16,
+                              height: 1.5,
+                              color: Theme.of(
+                                context,
+                              ).textTheme.bodyMedium?.color,
+                            ),
                           ),
                         ],
                       ),
@@ -101,14 +135,19 @@ class IssueDetailScreen extends StatelessWidget {
                 ),
               ),
             ),
-            _buildBottomActions(context, currentIssue) ?? const SizedBox.shrink(),
+            _buildBottomActions(context, currentIssue) ??
+                const SizedBox.shrink(),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildHeader(BuildContext context, Issue currentIssue, Color textColor) {
+  Widget _buildHeader(
+    BuildContext context,
+    Issue currentIssue,
+    Color textColor,
+  ) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -129,22 +168,46 @@ class IssueDetailScreen extends StatelessWidget {
             ),
           ],
         ),
-        Row(
-          children: [
-            IconButton(
-              icon: Icon(Icons.edit, color: textColor),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => IssueFormScreen(issue: currentIssue),
-                  ),
-                );
-              },
+        PopupMenuButton<String>(
+          icon: Icon(Icons.more_vert, color: textColor),
+          onSelected: (value) {
+            if (value == 'edit') {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => IssueFormScreen(issue: currentIssue),
+                ),
+              );
+            } else if (value == 'delete') {
+              _confirmDelete(context, currentIssue);
+            }
+          },
+          itemBuilder: (context) => [
+            PopupMenuItem(
+              value: 'edit',
+              child: Row(
+                children: [
+                  Icon(Icons.edit_outlined,
+                      size: 18,
+                      color: Theme.of(context).colorScheme.onSurface),
+                  const SizedBox(width: 10),
+                  Text('Edit Issue',
+                      style: TextStyle(
+                          color: Theme.of(context).colorScheme.onSurface)),
+                ],
+              ),
             ),
-            IconButton(
-              icon: const Icon(Icons.delete, color: Colors.redAccent),
-              onPressed: () => _confirmDelete(context, currentIssue),
+            PopupMenuItem(
+              value: 'delete',
+              child: Row(
+                children: [
+                  const Icon(Icons.delete_outline,
+                      size: 18, color: Colors.redAccent),
+                  const SizedBox(width: 10),
+                  const Text('Delete Issue',
+                      style: TextStyle(color: Colors.redAccent)),
+                ],
+              ),
             ),
           ],
         ),
@@ -158,11 +221,17 @@ class IssueDetailScreen extends StatelessWidget {
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Theme.of(context).dividerTheme.color ?? Colors.grey),
+        border: Border.all(
+          color: Theme.of(context).dividerTheme.color ?? Colors.grey,
+        ),
       ),
       child: Text(
         status.name.replaceAll('In', 'In '),
-        style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 12, fontWeight: FontWeight.w600),
+        style: TextStyle(
+          color: Theme.of(context).colorScheme.onSurface,
+          fontSize: 12,
+          fontWeight: FontWeight.w600,
+        ),
       ),
     );
   }
@@ -173,11 +242,17 @@ class IssueDetailScreen extends StatelessWidget {
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surface,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Theme.of(context).dividerTheme.color ?? Colors.grey),
+        border: Border.all(
+          color: Theme.of(context).dividerTheme.color ?? Colors.grey,
+        ),
       ),
       child: Text(
         priority.name,
-        style: TextStyle(color: Theme.of(context).colorScheme.onSurface, fontSize: 12, fontWeight: FontWeight.w600),
+        style: TextStyle(
+          color: Theme.of(context).colorScheme.onSurface,
+          fontSize: 12,
+          fontWeight: FontWeight.w600,
+        ),
       ),
     );
   }
@@ -189,7 +264,11 @@ class IssueDetailScreen extends StatelessWidget {
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
         color: Theme.of(context).scaffoldBackgroundColor,
-        border: Border(top: BorderSide(color: Theme.of(context).dividerTheme.color ?? Colors.grey)),
+        border: Border(
+          top: BorderSide(
+            color: Theme.of(context).dividerTheme.color ?? Colors.grey,
+          ),
+        ),
       ),
       child: Row(
         children: [
@@ -206,13 +285,17 @@ class IssueDetailScreen extends StatelessWidget {
                 ),
                 onPressed: () {
                   context.read<IssueProvider>().updateIssue(
-                        currentIssue.copyWith(status: IssueStatus.Resolved),
-                      );
+                    currentIssue.copyWith(status: IssueStatus.Resolved),
+                  );
                 },
-                child: const Text('Mark Resolved', style: TextStyle(fontWeight: FontWeight.bold)),
+                child: const Text(
+                  'Mark Resolved',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
               ),
             ),
-          if (currentIssue.status != IssueStatus.Resolved) const SizedBox(width: 16),
+          if (currentIssue.status != IssueStatus.Resolved)
+            const SizedBox(width: 16),
           Expanded(
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
@@ -220,12 +303,17 @@ class IssueDetailScreen extends StatelessWidget {
                 foregroundColor: Theme.of(context).colorScheme.onSurface,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
-                  side: BorderSide(color: Theme.of(context).dividerTheme.color ?? Colors.grey),
+                  side: BorderSide(
+                    color: Theme.of(context).dividerTheme.color ?? Colors.grey,
+                  ),
                 ),
                 padding: const EdgeInsets.symmetric(vertical: 16),
               ),
               onPressed: () => _confirmClose(context, currentIssue),
-              child: const Text('Close Issue', style: TextStyle(fontWeight: FontWeight.bold)),
+              child: const Text(
+                'Close Issue',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
             ),
           ),
         ],
@@ -238,12 +326,23 @@ class IssueDetailScreen extends StatelessWidget {
       context: context,
       builder: (ctx) => AlertDialog(
         backgroundColor: Theme.of(context).colorScheme.surface,
-        title: Text('Delete Issue', style: TextStyle(color: Theme.of(context).colorScheme.onSurface)),
-        content: Text('Are you sure you want to delete this issue?', style: TextStyle(color: Theme.of(context).textTheme.bodyMedium?.color)),
+        title: Text(
+          'Delete Issue',
+          style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
+        ),
+        content: Text(
+          'Are you sure you want to delete this issue?',
+          style: TextStyle(
+            color: Theme.of(context).textTheme.bodyMedium?.color,
+          ),
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: Text('Cancel', style: TextStyle(color: Theme.of(context).colorScheme.onSurface)),
+            child: Text(
+              'Cancel',
+              style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
+            ),
           ),
           TextButton(
             onPressed: () {
@@ -251,7 +350,10 @@ class IssueDetailScreen extends StatelessWidget {
               Navigator.pop(ctx);
               Navigator.pop(context); // Go back to list
             },
-            child: const Text('Delete', style: TextStyle(color: Colors.redAccent)),
+            child: const Text(
+              'Delete',
+              style: TextStyle(color: Colors.redAccent),
+            ),
           ),
         ],
       ),
@@ -263,21 +365,35 @@ class IssueDetailScreen extends StatelessWidget {
       context: context,
       builder: (ctx) => AlertDialog(
         backgroundColor: Theme.of(context).colorScheme.surface,
-        title: Text('Close Issue', style: TextStyle(color: Theme.of(context).colorScheme.onSurface)),
-        content: Text('Are you sure you want to close this issue?', style: TextStyle(color: Theme.of(context).textTheme.bodyMedium?.color)),
+        title: Text(
+          'Close Issue',
+          style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
+        ),
+        content: Text(
+          'Are you sure you want to close this issue?',
+          style: TextStyle(
+            color: Theme.of(context).textTheme.bodyMedium?.color,
+          ),
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: Text('Cancel', style: TextStyle(color: Theme.of(context).colorScheme.onSurface)),
+            child: Text(
+              'Cancel',
+              style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
+            ),
           ),
           TextButton(
             onPressed: () {
               context.read<IssueProvider>().updateIssue(
-                    currentIssue.copyWith(status: IssueStatus.Closed),
-                  );
+                currentIssue.copyWith(status: IssueStatus.Closed),
+              );
               Navigator.pop(ctx);
             },
-            child: Text('Close Issue', style: TextStyle(color: Theme.of(context).colorScheme.onSurface)),
+            child: Text(
+              'Close Issue',
+              style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
+            ),
           ),
         ],
       ),

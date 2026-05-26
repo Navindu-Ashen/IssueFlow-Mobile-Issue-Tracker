@@ -8,7 +8,7 @@ class MockApiService {
       InterceptorsWrapper(
         onRequest: (options, handler) async {
           // Simulate network latency
-          await Future.delayed(const Duration(milliseconds: 1500));
+          await Future.delayed(const Duration(milliseconds: 2000));
           return handler.next(options);
         },
         onResponse: (response, handler) {
@@ -25,10 +25,13 @@ class MockApiService {
     {
       'id': '1',
       'title': 'Fix login bug',
-      'description': 'Users cannot login with valid credentials when the network is slow.',
+      'description':
+          'Users cannot login with valid credentials when the network is slow.',
       'status': 'Open',
       'priority': 'High',
-      'createdAt': DateTime.now().subtract(const Duration(days: 1)).toIso8601String(),
+      'createdAt': DateTime.now()
+          .subtract(const Duration(days: 1))
+          .toIso8601String(),
       'assignee': 'John Doe',
       'syncStatus': 'Synced',
     },
@@ -38,7 +41,9 @@ class MockApiService {
       'description': 'Add dark mode support across all screens.',
       'status': 'In Progress',
       'priority': 'Medium',
-      'createdAt': DateTime.now().subtract(const Duration(days: 2)).toIso8601String(),
+      'createdAt': DateTime.now()
+          .subtract(const Duration(days: 2))
+          .toIso8601String(),
       'assignee': 'Jane Smith',
       'syncStatus': 'Synced',
     },
@@ -48,7 +53,9 @@ class MockApiService {
       'description': 'Update all packages to the latest stable versions.',
       'status': 'Resolved',
       'priority': 'Low',
-      'createdAt': DateTime.now().subtract(const Duration(days: 5)).toIso8601String(),
+      'createdAt': DateTime.now()
+          .subtract(const Duration(days: 5))
+          .toIso8601String(),
       'assignee': 'John Doe',
       'syncStatus': 'Synced',
     },
@@ -65,7 +72,9 @@ class MockApiService {
 
   // Simulate POST /issues
   Future<Response> createIssue(Map<String, dynamic> data) async {
-    final existingIndex = _mockData.indexWhere((issue) => issue['id'] == data['id']);
+    final existingIndex = _mockData.indexWhere(
+      (issue) => issue['id'] == data['id'],
+    );
     if (existingIndex == -1) {
       _mockData.add({...data, 'syncStatus': 'Synced'});
     } else {
@@ -106,17 +115,9 @@ class MockApiService {
   // Mock user credentials store
   static final List<Map<String, dynamic>> _mockUsers = [
     {
-      'id': 'admin_1',
-      'userName': 'Admin User',
-      'email': 'admin@test.com',
-      'contactNumber': '+1234567890',
-      'role': 'Admin',
-      'password': 'password123',
-    },
-    {
       'id': 'user_1',
-      'userName': 'Normal User',
-      'email': 'user@test.com',
+      'userName': 'Sample User',
+      'email': 'user@issueflow.com',
       'contactNumber': '+0987654321',
       'role': 'User',
       'password': 'password123',
@@ -136,7 +137,7 @@ class MockApiService {
         data: {
           'success': false,
           'message':
-              'Invalid credentials. Use admin@test.com or user@test.com with password123',
+              'Invalid credentials. Use user@issueflow.com with password123',
         },
         statusCode: 401,
       );

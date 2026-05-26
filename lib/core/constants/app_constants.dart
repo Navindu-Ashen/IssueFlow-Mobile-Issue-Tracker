@@ -5,6 +5,7 @@ class AppConstants {
   static const String authBox = 'authBox';
   static const String issueBox = 'issueBox';
   static const String settingsBox = 'settingsBox';
+  static const String activityBox = 'activityBox';
   
   // Keys
   static const String tokenKey = 'authToken';

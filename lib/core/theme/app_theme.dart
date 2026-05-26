@@ -99,7 +99,7 @@ class AppTheme {
         bodyMedium: GoogleFonts.inter(color: const Color(0xFFA1A1AA)), // Zinc 400
       ),
       appBarTheme: const AppBarTheme(
-        backgroundColor: const Color(0xFF120022),
+        backgroundColor: Color(0xFF120022),
         foregroundColor: Color(0xFFFAFAFA),
         elevation: 0,
         scrolledUnderElevation: 0,

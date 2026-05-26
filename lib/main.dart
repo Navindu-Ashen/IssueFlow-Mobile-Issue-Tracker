@@ -32,7 +32,7 @@ void main() async {
           create: (_) => AuthProvider(localStorageService, mockApiService),
         ),
         ChangeNotifierProvider(
-          create: (_) => IssueProvider(issueRepository),
+          create: (_) => IssueProvider(issueRepository, localStorageService),
         ),
         ChangeNotifierProvider(
           create: (_) => ThemeProvider(localStorageService),

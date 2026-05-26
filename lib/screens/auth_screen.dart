@@ -117,6 +117,7 @@ class _AuthScreenState extends State<AuthScreen> {
                         const SizedBox(height: 32),
                         CustomTextField(
                           controller: _emailController,
+                          keyboardType: TextInputType.emailAddress,
                           labelText: 'Email',
                           validator: (value) {
                             if (value == null || value.isEmpty) {
@@ -134,7 +135,9 @@ class _AuthScreenState extends State<AuthScreen> {
                               _obscurePassword
                                   ? Icons.visibility_off_outlined
                                   : Icons.visibility_outlined,
-                              color: Theme.of(context).colorScheme.onSurface.withAlpha(153),
+                              color: Theme.of(
+                                context,
+                              ).colorScheme.onSurface.withAlpha(153),
                               size: 22,
                             ),
                             onPressed: () {

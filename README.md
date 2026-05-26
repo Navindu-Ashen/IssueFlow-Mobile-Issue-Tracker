@@ -21,6 +21,7 @@
 
 ## 📋 Table of Contents
 
+- [Screen Recording & APK Download](#-screen-recording--apk-download)
 - [Overview](#-overview)
 - [Key Features](#-key-features)
 - [Screenshots](#-screenshots)
@@ -37,6 +38,18 @@
 - [Theme System](#-theme-system)
 - [Reusable UI Components](#-reusable-ui-components)
 - [Assumptions & Design Decisions](#-assumptions--design-decisions)
+
+---
+
+## Screen Recording & APK Download
+
+| Resource             | Link                                                                                                         |
+| -------------------- | ------------------------------------------------------------------------------------------------------------ |
+| **Screen Recording** | [View on Google Drive](https://drive.google.com/drive/folders/1DxndFZYepYXzIG-CAK3W-sdY3CW6Lm9M?usp=sharing) |
+| **APK File**         | [Download from GitHub Releases](https://github.com/Navindu-Ashen/IssueFlow-Mobile-Issue-Tracker/releases)    |
+
+> The screen recording demonstrates all major features including authentication, issue management, offline sync, and theme toggling.
+> The pre-built APK is available on the **GitHub Releases** page — no local build required.
 
 ---
 
